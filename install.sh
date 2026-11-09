@@ -23,8 +23,12 @@ glib-compile-schemas "$DEST/schemas"
 
 cp "$ROOT/data/launcher.js" "$DATA/sheaf/launcher.js"
 cp "$ROOT/data/$APP_ID.svg" "$DATA/icons/hicolor/scalable/apps/"
-sed "s|@EXEC@|gjs -m \"$DATA/sheaf/launcher.js\"|" "$ROOT/data/$APP_ID.desktop.in" \
-    > "$DATA/applications/$APP_ID.desktop"
+# The icon is given by its full path: the shell does not notice a new icon
+# in the user's icon folder until the next login, and would show a generic
+# one until then.
+ICON="$DATA/icons/hicolor/scalable/apps/$APP_ID.svg"
+sed -e "s|@EXEC@|gjs -m \"$DATA/sheaf/launcher.js\"|" -e "s|@ICON@|$ICON|" \
+    "$ROOT/data/$APP_ID.desktop.in" > "$DATA/applications/$APP_ID.desktop"
 update-desktop-database "$DATA/applications" 2>/dev/null || true
 
 cat <<EOF

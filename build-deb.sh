@@ -29,7 +29,7 @@ install -m 644 "$ROOT/$UUID"/*.js "$ROOT/$UUID/metadata.json" \
 install -m 644 "$ROOT/$UUID/schemas"/*.gschema.xml "$STAGE/usr/share/glib-2.0/schemas/"
 install -m 755 "$ROOT/data/launcher.js" "$STAGE/usr/bin/sheaf"
 install -m 644 "$ROOT/data/$APP_ID.svg" "$STAGE/usr/share/icons/hicolor/scalable/apps/"
-sed 's|@EXEC@|sheaf|' "$ROOT/data/$APP_ID.desktop.in" \
+sed -e 's|@EXEC@|sheaf|' -e "s|@ICON@|$APP_ID|" "$ROOT/data/$APP_ID.desktop.in" \
     > "$STAGE/usr/share/applications/$APP_ID.desktop"
 chmod 644 "$STAGE/usr/share/applications/$APP_ID.desktop"
 
