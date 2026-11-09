@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Sheaf
+GenericName=Window Tab Groups
+Comment=Group windows from any applications into tabs
+Exec=@EXEC@
+Icon=io.github.webhookstudios.Sheaf
+Terminal=false
+StartupNotify=false
+Categories=Utility;GNOME;GTK;
+Keywords=tabs;windows;group;tabbed;extension;

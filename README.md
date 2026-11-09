@@ -13,9 +13,25 @@ Sheaf has only been tested on Ubuntu 26.04 with GNOME Shell 50.1 on Wayland. Oth
 
 ## Install
 
-### From a release
+### With the deb package (recommended)
 
-Download the latest zip and install it:
+Download `sheaf_1.1.0_all.deb` from the [latest release](https://github.com/webhookstudios/sheaf/releases/latest), then install it:
+
+```bash
+sudo apt install ./sheaf_1.1.0_all.deb
+```
+
+Log out and back in, then open **Sheaf** from the apps menu. The first time, that turns Sheaf on and opens its settings. If you open it before logging out, it tells you to log out and turns itself on at the next login.
+
+The package installs Sheaf for every user of the computer. To remove it:
+
+```bash
+sudo apt remove sheaf
+```
+
+### As an extension zip, without root
+
+This installs the extension only, with no apps-menu entry. Download the latest zip and install it:
 
 ```bash
 wget https://github.com/webhookstudios/sheaf/releases/latest/download/sheaf@webhookstudios.github.io.shell-extension.zip
@@ -41,9 +57,9 @@ git clone https://github.com/webhookstudios/sheaf.git
 ./sheaf/install.sh
 ```
 
-Then log out, log back in, and run the `gnome-extensions enable` command above.
+This installs for your user only, with the apps-menu entry. Log out and back in, then open **Sheaf** from the apps menu.
 
-### Uninstall
+To remove a zip or source install:
 
 ```bash
 gnome-extensions uninstall sheaf@webhookstudios.github.io
@@ -89,7 +105,7 @@ All four can be changed in the preferences.
 
 ## Preferences
 
-Open them from the Extensions app, or with:
+Open **Sheaf** from the apps menu, or run:
 
 ```bash
 gnome-extensions prefs sheaf@webhookstudios.github.io
@@ -141,7 +157,9 @@ ln -s "$PWD/sheaf@webhookstudios.github.io" ~/.local/share/gnome-shell/extension
 glib-compile-schemas sheaf@webhookstudios.github.io/schemas
 ```
 
-A Wayland session cannot reload extension code, so each change needs a logout, or a separate test shell. Build a release zip with `./pack.sh`.
+A Wayland session cannot reload extension code, so each change needs a logout, or a separate test shell.
+
+Build the release files into `dist/` with `./pack.sh` (extension zip) and `./build-deb.sh` (deb package, needs only `dpkg-deb`). The apps-menu entry, its icon and the launcher it runs are in `data/`.
 
 ## License
 

@@ -1,21 +1,35 @@
 #!/bin/sh
-# Installs Sheaf for the current user by copying it into the GNOME Shell
-# extensions folder and compiling its settings schema.
+# Installs Sheaf for the current user, without root: the extension, plus an
+# apps-menu entry that opens its settings.
 set -e
 
 UUID=sheaf@webhookstudios.github.io
-SRC="$(cd "$(dirname "$0")" && pwd)/$UUID"
-DEST="${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/$UUID"
+APP_ID=io.github.webhookstudios.Sheaf
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
+DEST="$DATA/gnome-shell/extensions/$UUID"
 
-mkdir -p "$(dirname "$DEST")"
-rm -rf "$DEST"
-cp -r "$SRC" "$DEST"
+mkdir -p "$DATA/gnome-shell/extensions" "$DATA/sheaf" "$DATA/applications" \
+    "$DATA/icons/hicolor/scalable/apps"
+
+# A link here is a development setup pointing at a source folder: leave it.
+if [ -L "$DEST" ]; then
+    echo "Keeping existing link: $DEST"
+else
+    rm -rf "$DEST"
+    cp -r "$ROOT/$UUID" "$DEST"
+fi
 glib-compile-schemas "$DEST/schemas"
+
+cp "$ROOT/data/launcher.js" "$DATA/sheaf/launcher.js"
+cp "$ROOT/data/$APP_ID.svg" "$DATA/icons/hicolor/scalable/apps/"
+sed "s|@EXEC@|gjs -m \"$DATA/sheaf/launcher.js\"|" "$ROOT/data/$APP_ID.desktop.in" \
+    > "$DATA/applications/$APP_ID.desktop"
+update-desktop-database "$DATA/applications" 2>/dev/null || true
 
 cat <<EOF
 Sheaf is installed in:
   $DEST
 
-Log out and back in, then turn it on with:
-  gnome-extensions enable $UUID
+Log out and back in, then open Sheaf from the apps menu.
 EOF

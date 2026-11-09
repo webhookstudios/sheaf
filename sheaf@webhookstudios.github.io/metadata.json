@@ -2,7 +2,7 @@
   "uuid": "sheaf@webhookstudios.github.io",
   "name": "Sheaf",
   "description": "Tab groups for any window. Put windows from different applications into one slot with a tab bar, like browser tabs for your whole desktop.",
-  "version-name": "1.0.0",
+  "version-name": "1.1.0",
   "shell-version": ["50"],
   "session-modes": ["user", "unlock-dialog"],
   "settings-schema": "org.gnome.shell.extensions.sheaf",
