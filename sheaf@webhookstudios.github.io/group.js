@@ -146,6 +146,10 @@ export class Group {
 
         this.windows.push(window);
         window.connectObject(
+            // The window is going away. This fires before the shell starts
+            // its closing animation and before focus moves on, which is the
+            // last moment the tab bar can be safely moved off this window.
+            'unmanaging', () => this.remove(window, {closing: true}),
             'unmanaged', () => this.remove(window, {closing: true}),
             'position-changed', () => this._onGeometryChanged(window),
             'size-changed', () => this._onGeometryChanged(window),
@@ -159,10 +163,19 @@ export class Group {
             this._actors.set(window, actor);
             // The shell's own animations (minimize, unminimize, map) end by
             // making the actor opaque again, which would reveal a hidden tab.
-            actor.connectObject('notify::opacity', () => {
-                if (window !== this.active && actor.opacity !== 0)
-                    actor.opacity = 0;
-            }, this);
+            actor.connectObject(
+                'notify::opacity', () => {
+                    if (window !== this.active && actor.opacity !== 0)
+                        actor.opacity = 0;
+                },
+                // Last line of defence: the bar is a child of the active
+                // window's actor and would be destroyed along with it.
+                'destroy', () => {
+                    if (this._bar?.get_parent() === actor)
+                        actor.remove_child(this._bar);
+                    this.remove(window, {closing: true});
+                },
+                this);
         }
         this._bar.addTab(window);
 
@@ -178,8 +191,10 @@ export class Group {
 
     // `refocus` hands keyboard focus to the tab that takes over when the
     // removed window was the one the user was working in. `closing` is set
-    // when the window is going away, so it is not made visible for its
-    // closing animation.
+    // when the window is going away. A closing window's actor must not be
+    // touched: the shell is animating it, and changing its opacity cuts the
+    // animation short, which destroys the actor, and the tab bar with it,
+    // on the spot.
     remove(window, {refocus = true, closing = false} = {}) {
         const index = this.windows.indexOf(window);
         if (index < 0)
@@ -188,7 +203,7 @@ export class Group {
         this.windows.splice(index, 1);
         window.disconnectObject(this);
         this._actors.get(window)?.disconnectObject(this);
-        if (!closing || window === this.active)
+        if (!closing)
             this._setOpacity(window, 255);
         this._actors.delete(window);
         this._bar.removeTab(window);
@@ -202,8 +217,11 @@ export class Group {
             const next = this.windows[Math.min(index, this.windows.length - 1)];
             this.setActive(next);
 
+            // When closing, the compositor is about to choose the next
+            // focus itself; if it picks another tab, that tab is shown.
             const focus = global.display.focus_window;
-            if (refocus && (!focus || focus === window || this.has(focus)))
+            if (refocus && !closing &&
+                (!focus || focus === window || this.has(focus)))
                 Main.activateWindow(next);
         }
 
@@ -213,7 +231,7 @@ export class Group {
     }
 
     setActive(window) {
-        if (!this.has(window) || this.active === window)
+        if (!this._bar || !this.has(window) || this.active === window)
             return;
 
         const previous = this.active;
