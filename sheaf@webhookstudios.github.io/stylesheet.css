@@ -1,0 +1,72 @@
+/* Bar, selected-tab and text colors are settings, applied inline by tabBar.js. */
+
+.sheaf-bar {
+    border-radius: 10px 10px 0 0;
+    padding: 4px 4px 0 0;
+}
+
+.sheaf-grip {
+    padding: 0 8px 4px 8px;
+}
+
+.sheaf-tabs {
+    spacing: 2px;
+}
+
+.sheaf-tab {
+    border-radius: 7px 7px 0 0;
+    padding: 0 6px 0 8px;
+    spacing: 6px;
+    font-size: 10pt;
+}
+
+.sheaf-tab:hover {
+    background-color: rgba(128, 128, 128, 0.25);
+}
+
+.sheaf-close {
+    border-radius: 99px;
+    padding: 3px;
+}
+
+.sheaf-close StIcon {
+    icon-size: 12px;
+}
+
+.sheaf-close:hover {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.sheaf-add {
+    border-radius: 99px;
+    padding: 5px;
+    margin: 0 4px 4px 4px;
+}
+
+.sheaf-add StIcon {
+    icon-size: 14px;
+}
+
+.sheaf-add:hover,
+.sheaf-add:active {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.sheaf-add-menu .popup-menu-item {
+    max-width: 30em;
+}
+
+.sheaf-drop-indicator {
+    background-color: rgba(53, 132, 228, 0.28);
+    border: 2px solid rgba(53, 132, 228, 0.95);
+    border-radius: 10px;
+}
+
+.sheaf-drop-label {
+    background-color: rgba(20, 20, 20, 0.85);
+    border-radius: 99px;
+    padding: 6px 14px;
+    color: #ffffff;
+    font-size: 11pt;
+    font-weight: bold;
+}

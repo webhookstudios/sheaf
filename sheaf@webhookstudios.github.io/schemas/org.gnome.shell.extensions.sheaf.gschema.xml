@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.sheaf"
+          path="/org/gnome/shell/extensions/sheaf/">
+
+    <!-- Shortcuts -->
+    <key name="group-windows" type="as">
+      <default><![CDATA[['<Super>g']]]></default>
+      <summary>Group the focused window with the previously focused one</summary>
+    </key>
+    <key name="ungroup-window" type="as">
+      <default><![CDATA[['<Super><Shift>g']]]></default>
+      <summary>Take the focused window out of its group</summary>
+    </key>
+    <key name="next-tab" type="as">
+      <default><![CDATA[['<Super>bracketright']]]></default>
+      <summary>Switch to the next tab in the focused group</summary>
+    </key>
+    <key name="previous-tab" type="as">
+      <default><![CDATA[['<Super>bracketleft']]]></default>
+      <summary>Switch to the previous tab in the focused group</summary>
+    </key>
+
+    <!-- Grouping -->
+    <key name="hover-group-delay" type="i">
+      <default>600</default>
+      <range min="100" max="3000"/>
+      <summary>How long to hold a dragged window still over another, in milliseconds, before releasing groups them</summary>
+    </key>
+    <key name="tabs-on-all-windows" type="b">
+      <default>false</default>
+      <summary>Show a tab bar above windows that are not in a group</summary>
+    </key>
+    <key name="auto-group-same-app" type="b">
+      <default>false</default>
+      <summary>Put a new window into a group with other windows of its application on the same workspace</summary>
+    </key>
+    <key name="restore-groups" type="b">
+      <default>true</default>
+      <summary>Put windows back into their groups after logging in again</summary>
+    </key>
+
+    <!-- Appearance -->
+    <key name="bar-height" type="i">
+      <default>32</default>
+      <range min="20" max="64"/>
+      <summary>Height of the tab bar in pixels</summary>
+    </key>
+    <key name="bar-color" type="s">
+      <default>'#262626'</default>
+      <summary>Background color of the tab bar</summary>
+    </key>
+    <key name="active-tab-color" type="s">
+      <default>'#454545'</default>
+      <summary>Background color of the selected tab</summary>
+    </key>
+    <key name="text-color" type="s">
+      <default>'#ffffff'</default>
+      <summary>Color of tab titles and icons</summary>
+    </key>
+
+    <!-- Internal -->
+    <key name="saved-groups" type="s">
+      <default>'[]'</default>
+      <summary>The groups to restore, as JSON. Written by the extension.</summary>
+    </key>
+  </schema>
+</schemalist>
