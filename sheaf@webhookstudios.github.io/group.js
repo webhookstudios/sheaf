@@ -1,12 +1,17 @@
 import GLib from 'gi://GLib';
 import Graphene from 'gi://Graphene';
 import Meta from 'gi://Meta';
+import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {TabBar} from './tabBar.js';
 
 const MIN_HEIGHT_AFTER_SHRINK = 120;
+// How far the bar's colour extends down behind the window, so the window's
+// rounded top corners sit against the bar instead of showing the desktop.
+// Larger than any corner radius in use.
+const CORNER_FILL = 20;
 // Where a tab pulled out of the bar is held, relative to its window's
 // top-left corner: roughly where a title bar would be grabbed.
 const DETACH_GRAB_X = 150;
@@ -99,6 +104,9 @@ export class Group {
         this._settleId = 0;
         this._syncingState = false;
         this._actors = new Map();
+        // Drawn beneath the window's own surface; see CORNER_FILL.
+        this._backdrop = new St.Widget({style_class: 'sheaf-backdrop', reactive: false});
+        this._backdrop.style = `background-color: ${colors.bar};`;
         this._bar = new TabBar({
             onActivate: window => this.activate(window),
             onClose: window => window.delete(global.get_current_time()),
@@ -113,6 +121,7 @@ export class Group {
     setAppearance({barHeight, colors}) {
         this._barHeight = barHeight;
         this._bar.setColors(colors);
+        this._backdrop.style = `background-color: ${colors.bar};`;
         this._syncBar();
         this.queueSettle();
     }
@@ -171,8 +180,7 @@ export class Group {
                 // Last line of defence: the bar is a child of the active
                 // window's actor and would be destroyed along with it.
                 'destroy', () => {
-                    if (this._bar?.get_parent() === actor)
-                        actor.remove_child(this._bar);
+                    this._detachDecor(actor);
                     this.remove(window, {closing: true});
                 },
                 this);
@@ -199,6 +207,11 @@ export class Group {
         const index = this.windows.indexOf(window);
         if (index < 0)
             return;
+
+        // Everything attached to a closing window's actor must come off it
+        // now, or it is destroyed with the actor.
+        if (window === this.active)
+            this._detachDecor(this._actors.get(window));
 
         this.windows.splice(index, 1);
         window.disconnectObject(this);
@@ -245,8 +258,13 @@ export class Group {
         }
         this._setOpacity(window, 255);
 
-        this._bar.get_parent()?.remove_child(this._bar);
-        this._actors.get(window)?.add_child(this._bar);
+        this._detachDecor();
+        const actor = this._actors.get(window);
+        if (actor) {
+            actor.add_child(this._bar);
+            // First in the child list is painted first: beneath the window.
+            actor.insert_child_below(this._backdrop, null);
+        }
         this._bar.setActiveTab(window);
         this._syncBar();
         this.queueSettle();
@@ -289,9 +307,23 @@ export class Group {
         this._actors.clear();
         this.windows = [];
         this.active = null;
+        this._detachDecor();
+        this._backdrop.destroy();
+        this._backdrop = null;
         this._bar.destroy();
         this._bar = null;
         this._onDissolved(this);
+    }
+
+    // Takes the bar and its backdrop off whichever actor holds them. Both
+    // are children of the visible window's actor, so anything that would
+    // destroy that actor has to do this first.
+    _detachDecor(from = null) {
+        for (const decor of [this._bar, this._backdrop]) {
+            const parent = decor?.get_parent();
+            if (parent && (!from || parent === from))
+                parent.remove_child(decor);
+        }
     }
 
     _setOpacity(window, opacity) {
@@ -483,10 +515,15 @@ export class Group {
         // shadows; the bar is aligned to the visible frame.
         const frame = window.get_frame_rect();
         const buffer = window.get_buffer_rect();
-        this._bar.set_position(frame.x - buffer.x, frame.y - buffer.y - this._barHeight);
+        const x = frame.x - buffer.x;
+        const y = frame.y - buffer.y - this._barHeight;
+        this._bar.set_position(x, y);
         this._bar.set_size(frame.width, this._barHeight);
+        this._backdrop.set_position(x, y);
+        this._backdrop.set_size(frame.width, this._barHeight + CORNER_FILL);
         // No room above a fullscreen window, or a maximized one in the
         // moment before it is turned into a filled group.
         this._bar.visible = !window.is_maximized() && !window.is_fullscreen();
+        this._backdrop.visible = this._bar.visible;
     }
 }

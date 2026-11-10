@@ -84,7 +84,7 @@ class TabBar extends St.BoxLayout {
     setColors(colors) {
         this._colors = colors;
         // Icons and labels inherit the text color from the bar.
-        this.style = `background-color: ${colors.bar}; color: ${colors.text};`;
+        this.style = `color: ${colors.text};`;
         this._styleTabs();
     }
 

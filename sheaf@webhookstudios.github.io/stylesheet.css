@@ -1,8 +1,12 @@
 /* Bar, selected-tab and text colors are settings, applied inline by tabBar.js. */
 
 .sheaf-bar {
-    border-radius: 10px 10px 0 0;
     padding: 4px 4px 0 0;
+}
+
+/* Carries the bar's colour, drawn beneath the window. */
+.sheaf-backdrop {
+    border-radius: 10px 10px 0 0;
 }
 
 .sheaf-grip {
