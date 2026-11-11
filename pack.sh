@@ -11,6 +11,7 @@ gnome-extensions pack --force --out-dir "$ROOT/dist" \
     --extra-source=tabBar.js \
     --extra-source=hoverJoin.js \
     --extra-source=addMenu.js \
+    --extra-source=sedge \
     "$ROOT/$UUID"
 
 echo "Built $ROOT/dist/$UUID.shell-extension.zip"

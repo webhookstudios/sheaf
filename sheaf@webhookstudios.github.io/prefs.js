@@ -4,6 +4,7 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import {applyToWindow as applySedge} from './sedge/sedge.js';
 
 const SHORTCUTS = [
     ['group-windows', 'Group with previous window',
@@ -135,6 +136,8 @@ function shortcutRow(window, settings, key, title, subtitle) {
 
 export default class SheafPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
+        applySedge(window, `${this.path}/sedge`);
+        window.set_title('Sheaf');
         const settings = this.getSettings();
         const page = new Adw.PreferencesPage();
         window.add(page);

@@ -6,6 +6,9 @@
 
 import Adw from 'gi://Adw?version=1';
 import Gio from 'gi://Gio';
+import PangoCairo from 'gi://PangoCairo';
+import Gdk from 'gi://Gdk?version=4.0';
+import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk?version=4.0';
 
 const UUID = 'sheaf@webhookstudios.github.io';
@@ -36,6 +39,41 @@ function markEnabled() {
     Gio.Settings.sync();
 }
 
+// The Sedge look for this window. The kit ships inside the installed extension.
+function styleWindow(window) {
+    const dir = [GLib.get_user_data_dir(), ...GLib.get_system_data_dirs()]
+        .map(base => GLib.build_filenamev([base, 'gnome-shell', 'extensions', UUID, 'sedge']))
+        .find(d => GLib.file_test(`${d}/sedge-scoped.css`, GLib.FileTest.EXISTS));
+    if (!dir)
+        return;
+    const fontmap = PangoCairo.FontMap.get_default();
+    for (const font of ['YoungSerif-Regular.ttf', 'PublicSans[wght].ttf'])
+        try {
+            fontmap.add_font_file?.(`${dir}/fonts/${font}`);
+        } catch {
+            // The system font is fine.
+        }
+    const sheet = name => {
+        const provider = new Gtk.CssProvider();
+        provider.load_from_path(`${dir}/${name}`);
+        return provider;
+    };
+    const display = Gdk.Display.get_default();
+    const priority = Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION - 1;
+    Gtk.StyleContext.add_provider_for_display(display, sheet('sedge-scoped.css'), priority);
+    const dark = sheet('sedge-scoped-dark.css');
+    const manager = Adw.StyleManager.get_default();
+    const follow = () => {
+        if (manager.get_dark())
+            Gtk.StyleContext.add_provider_for_display(display, dark, priority);
+        else
+            Gtk.StyleContext.remove_provider_for_display(display, dark);
+    };
+    manager.connect('notify::dark', follow);
+    follow();
+    window.add_css_class('sedge');
+}
+
 function showLogoutNotice(app) {
     const page = new Adw.StatusPage({
         icon_name: APP_ID,
@@ -61,6 +99,7 @@ function showLogoutNotice(app) {
         content: view,
     });
     close.connect('clicked', () => window.close());
+    styleWindow(window);
     window.present();
 }
 

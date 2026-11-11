@@ -24,6 +24,8 @@ install -d "$EXT" "$STAGE/DEBIAN" "$STAGE/usr/bin" \
 
 install -m 644 "$ROOT/$UUID"/*.js "$ROOT/$UUID/metadata.json" \
     "$ROOT/$UUID/stylesheet.css" "$EXT/"
+cp -r "$ROOT/$UUID/sedge" "$EXT/"
+find "$EXT/sedge" -type f -exec chmod 644 {} +
 # With no schemas folder of its own, the extension reads its schema from
 # the system one, which dpkg compiles through glib's trigger.
 install -m 644 "$ROOT/$UUID/schemas"/*.gschema.xml "$STAGE/usr/share/glib-2.0/schemas/"
@@ -35,7 +37,7 @@ chmod 644 "$STAGE/usr/share/applications/$APP_ID.desktop"
 
 cat > "$STAGE/usr/share/doc/sheaf/copyright" <<EOF
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Sheaf
+Upstream-Name: Sheaf (formerly Sheaf)
 Source: https://github.com/webhookstudios/sheaf
 
 Files: *
@@ -43,6 +45,11 @@ Copyright: $(date +%Y) webhookstudios
 License: GPL-2+
  On Debian systems, the full text of the GNU General Public License
  version 2 can be found in /usr/share/common-licenses/GPL-2.
+
+Files: usr/share/gnome-shell/extensions/*/sedge/fonts/*
+Copyright: 2023 The Young Serif Project Authors; 2015 The Public Sans Project Authors
+License: OFL-1.1
+ The full license texts are in the extension's sedge/fonts/ folder.
 EOF
 chmod 644 "$STAGE/usr/share/doc/sheaf/copyright"
 
@@ -57,7 +64,7 @@ Section: gnome
 Priority: optional
 Homepage: https://github.com/webhookstudios/sheaf
 Description: Tab groups for any window on GNOME
- Sheaf is a GNOME Shell extension that puts windows from different
+ Sheaf (formerly Sheaf) is a GNOME Shell extension that puts windows from different
  applications into one slot with a tab bar, like browser tabs for the
  whole desktop.
  .

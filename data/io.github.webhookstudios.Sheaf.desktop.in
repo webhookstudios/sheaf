@@ -8,4 +8,4 @@ Icon=@ICON@
 Terminal=false
 StartupNotify=false
 Categories=Utility;GNOME;GTK;
-Keywords=tabs;windows;group;tabbed;extension;
+Keywords=sheaf;sedge;tabs;windows;group;tabbed;extension;
