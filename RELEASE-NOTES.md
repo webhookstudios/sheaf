@@ -1,14 +1,11 @@
-# Sheaf 1.2.0
+# Sheaf 1.2.1
 
-Sheaf keeps its name. It now has the Sedge look shared by every webhookstudios app: one set of colors, fonts and icons, in light and dark mode.
+A small cleanup release. Everything else works exactly as before.
 
-- New icon, colors and fonts. Window titles and headings use the Sedge serif.
-- New default tab bar colors in Sedge pine and green. Colors you already picked stay.
-- The settings window is titled Sheaf.
-- Everything works exactly as before. Your settings and presets carry over.
+- Fixes the package description, which repeated the app's name.
 
 Install:
 
 ```bash
-sudo apt install ./sheaf_1.2.0_all.deb
+sudo apt install ./sheaf_1.2.1_all.deb
 ```

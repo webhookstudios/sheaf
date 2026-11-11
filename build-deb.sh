@@ -37,7 +37,7 @@ chmod 644 "$STAGE/usr/share/applications/$APP_ID.desktop"
 
 cat > "$STAGE/usr/share/doc/sheaf/copyright" <<EOF
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Sheaf (formerly Sheaf)
+Upstream-Name: Sheaf
 Source: https://github.com/webhookstudios/sheaf
 
 Files: *
@@ -64,7 +64,7 @@ Section: gnome
 Priority: optional
 Homepage: https://github.com/webhookstudios/sheaf
 Description: Tab groups for any window on GNOME
- Sheaf (formerly Sheaf) is a GNOME Shell extension that puts windows from different
+ Sheaf is a GNOME Shell extension that puts windows from different
  applications into one slot with a tab bar, like browser tabs for the
  whole desktop.
  .

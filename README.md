@@ -17,10 +17,10 @@ Sheaf has only been tested on Ubuntu 26.04 with GNOME Shell 50.1 on Wayland. Oth
 
 ### With the deb package (recommended)
 
-Download `sheaf_1.2.0_all.deb` from the [latest release](https://github.com/webhookstudios/sheaf/releases/latest), then install it:
+Download `sheaf_1.2.1_all.deb` from the [latest release](https://github.com/webhookstudios/sheaf/releases/latest), then install it:
 
 ```bash
-sudo apt install ./sheaf_1.2.0_all.deb
+sudo apt install ./sheaf_1.2.1_all.deb
 ```
 
 Log out and back in, then open **Sheaf** from the apps menu. The first time, that turns Sheaf on and opens its settings. If you open it before logging out, it tells you to log out and turns itself on at the next login.
