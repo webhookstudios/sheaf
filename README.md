@@ -121,8 +121,12 @@ gnome-extensions prefs sheaf@webhookstudios.github.io
 | Group windows of the same app | Off | A new window joins the other windows of its application on the same workspace |
 | Tab bar on every window | Off | Windows that are not in a group get a bar with a single tab |
 | Restore groups | On | After logging in again, windows go back into their groups |
-| Tab bar height, colors | 32 px, dark | Appearance of the bar |
+| Tab bar height | 32 px | Height of the bar above a group |
+| Tab bar background | Dark pine | The strip behind the tabs, the grip and the + button |
+| Selected tab, Text and icons | Pine, light gray | The tab you are looking at, and the titles and icons |
 | Keyboard shortcuts | See above | Shortcuts already used by the desktop cannot be chosen |
+
+The colors you pick are kept in your settings, not in Sheaf's files, so they stay through restarts and updates. **Reset** puts the bar height and colors back to the defaults. `test/colors.sh` checks this in a test shell: it picks a color, restarts, then updates from the previous package and checks that the bar keeps the color.
 
 ## Limitations
 

@@ -40,7 +40,8 @@
       <summary>Put windows back into their groups after logging in again</summary>
     </key>
 
-    <!-- Appearance -->
+    <!-- Appearance. What people pick is saved in dconf under the path above, so it
+         carries over through restarts and updates. Keep the path and key names. -->
     <key name="bar-height" type="i">
       <default>32</default>
       <range min="20" max="64"/>
