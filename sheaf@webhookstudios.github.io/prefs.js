@@ -14,10 +14,12 @@ const SHORTCUTS = [
     ['previous-tab', 'Previous tab', ''],
 ];
 
+// Saved in GSettings (dconf), so the choices outlive restarts and updates.
+// Keep these key names: renaming one would drop what people picked.
 const COLORS = [
-    ['bar-color', 'Tab bar'],
-    ['active-tab-color', 'Selected tab'],
-    ['text-color', 'Text and icons'],
+    ['bar-color', 'Tab bar background', 'The strip behind the tabs, the grip and the + button'],
+    ['active-tab-color', 'Selected tab', 'Behind the tab of the window you are looking at'],
+    ['text-color', 'Text and icons', ''],
 ];
 
 function switchRow(settings, key, title, subtitle) {
@@ -49,7 +51,7 @@ function toHex(rgba) {
     return `#${part(rgba.red)}${part(rgba.green)}${part(rgba.blue)}`;
 }
 
-function colorRow(settings, key, title) {
+function colorRow(settings, key, title, subtitle) {
     const button = new Gtk.ColorDialogButton({
         dialog: new Gtk.ColorDialog({with_alpha: false}),
         valign: Gtk.Align.CENTER,
@@ -67,7 +69,7 @@ function colorRow(settings, key, title) {
             settings.set_string(key, hex);
     });
 
-    const row = new Adw.ActionRow({title, activatable_widget: button});
+    const row = new Adw.ActionRow({title, subtitle, activatable_widget: button});
     row.add_suffix(button);
     return row;
 }
@@ -167,8 +169,8 @@ export default class SheafPreferences extends ExtensionPreferences {
         });
         const appearance = new Adw.PreferencesGroup({title: 'Appearance', header_suffix: reset});
         appearance.add(spinRow(settings, 'bar-height', 'Tab bar height', 'Pixels', 1));
-        for (const [key, title] of COLORS)
-            appearance.add(colorRow(settings, key, title));
+        for (const [key, title, subtitle] of COLORS)
+            appearance.add(colorRow(settings, key, title, subtitle));
         page.add(appearance);
 
         const shortcuts = new Adw.PreferencesGroup({title: 'Keyboard shortcuts'});
